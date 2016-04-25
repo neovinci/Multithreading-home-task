@@ -45,8 +45,11 @@ public class Sort {
 		}
 		
 		private void quicksort(int first, int last) {
-			
-			if (first < last) {
+			if(last - first == 1) {
+				if(array[last] < array[first]) {
+					swap(first, last);
+				}				
+			} else if (first < last) {
 				int middleIndex = partitionArray(first, last);
 				
 				if (countThread.get() >= NUMBER_CORE) {
@@ -56,22 +59,40 @@ public class Sort {
 					countThread.getAndAdd(2);
 					threadPool.submit((new QuickSort(array, first, middleIndex - 1, countThread)));
 					threadPool.submit((new QuickSort(array, middleIndex + 1, last, countThread)));
+					
+					
 				}
-			}
+			}			
 	    }
 		 
 		private int partitionArray(int first, int last) {
-			int rootValue = array[last];
-			int middleIndex = first;
-			for (int i = first; i < last; i++) {
+			int middleIndex = (first + last) / 2;
+			int rootValue = array[middleIndex];
+			swap(middleIndex, first);
+			
+			int scanUp = first + 1;
+			int scanDown = last;
+			
+			do {
 				
-				if (array[i] < rootValue) {
-					swap(i, middleIndex);
-					middleIndex++;
+				while(scanUp <= scanDown && array[scanUp] <= rootValue) {
+					scanUp++;
 				}
-			}
-			swap(middleIndex, last);
-			return middleIndex;
+				
+				while(array[scanDown] > rootValue) {
+					scanDown--;
+				}
+				
+				if(scanUp < scanDown) {
+					swap(scanUp, scanDown);
+				}
+				
+			} while(scanUp < scanDown);
+			
+			array[first] = array[scanDown];
+			array[scanDown] = rootValue;
+			
+			return scanDown;
 		}
 			
 		private void swap (int left, int right) {
