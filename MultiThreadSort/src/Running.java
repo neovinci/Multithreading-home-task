@@ -9,10 +9,10 @@ public class Running {
 
 	public static void main(String[] args) {
 		Random rnd = new Random();
-		final int MAX_SIZE = 9999999;
+		final int MAX_SIZE = 10;
 		int[] array = new int[MAX_SIZE];
 		for (int i = 0; i < MAX_SIZE; i++) {
-			array[i] = rnd.nextInt(50);			
+			array[i] = rnd.nextInt();			
 		}
 	
 		System.out.println();
@@ -31,6 +31,9 @@ public class Running {
 		Sort.quicksort(array1);
 		finish = new Date();
 		System.out.println("Final! array sorted by " + (finish.getTime() - start.getTime()) + " ms");
+		for(int out : array1) {
+			System.out.print(out + "  ");
+		}
 	}
 
 }
